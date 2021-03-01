@@ -17,6 +17,7 @@ client.on("message", async message => {
   if (message.channel.type == "dm") {
     return;
   }
+  
   if (message.content == prefix+"global_setup") {
     if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_WEBHOOKS")) {
       message.channel.send("Webhookを作成する権限がありません。\nMANAGE_WEBHOOKS")
@@ -98,6 +99,8 @@ client.on("message", message => {
   if (message.channel.type == "dm") {
     return;
   }
+  const gmute = (await gmutes.get(message.author.id)) || { score: 0, reason: 0 }
+  if (gmute.score == 1) return message.reply("権限がないよ！");
   try {
     const guild_webhook = JSON.parse(fs.readFileSync(`globalchatfiles/${message.guild.id}/webhook.json`))
     var sentchannelid = guild_webhook.channel
